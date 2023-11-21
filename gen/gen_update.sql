@@ -93,8 +93,8 @@ BEGIN
                 AND ic.[key_ordinal] > 0
         ORDER BY c.[column_id];
 
-    SELECT @parameter_list = LEFT(@parameter_list, LEN(@parameter_list) - 1);
-    SELECT @set_list = LEFT(@set_list, LEN(@set_list) - 1);
+    IF (LEN(@parameter_list) > 0) SELECT @parameter_list = LEFT(@parameter_list, LEN(@parameter_list) - 1);
+    IF (LEN(@set_list) > 0) SELECT @set_list = LEFT(@set_list, LEN(@set_list) - 1);
 
     SELECT @stmt = REPLACE(@stmt, N'{key_list}', @key_list);
     SELECT @stmt = REPLACE(@stmt, N'{parameter_list}', @parameter_list);

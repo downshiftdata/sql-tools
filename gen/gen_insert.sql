@@ -104,9 +104,9 @@ BEGIN
                 AND c.[user_type_id] = t.[user_type_id]
         ORDER BY c.[column_id];
 
-    SELECT @column_list = LEFT(@column_list, LEN(@column_list) - 1);
-    SELECT @parameter_list = LEFT(@parameter_list, LEN(@parameter_list) - 1);
-    SELECT @value_list = LEFT(@value_list, LEN(@value_list) - 1);
+    IF (LEN(@column_list) > 0) SELECT @column_list = LEFT(@column_list, LEN(@column_list) - 1);
+    IF (LEN(@parameter_list) > 0) SELECT @parameter_list = LEFT(@parameter_list, LEN(@parameter_list) - 1);
+    IF (LEN(@value_list) > 0) SELECT @value_list = LEFT(@value_list, LEN(@value_list) - 1);
 
     SELECT @stmt = REPLACE(@stmt, N'{column_list}', @column_list);
     SELECT @stmt = REPLACE(@stmt, N'{parameter_list}', @parameter_list);

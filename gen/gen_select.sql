@@ -78,8 +78,8 @@ BEGIN
                 AND ic.[key_ordinal] > 0
         ORDER BY ic.[key_ordinal];
 
-    SELECT @column_list = LEFT(@column_list, LEN(@column_list) - 1);
-    SELECT @key_list = LEFT(@key_list, LEN(@key_list) - 1);
+    IF (LEN(@column_list) > 0) SELECT @column_list = LEFT(@column_list, LEN(@column_list) - 1);
+    IF (LEN(@key_list) > 0) SELECT @key_list = LEFT(@key_list, LEN(@key_list) - 1);
 
     SELECT @stmt = REPLACE(@stmt, N'{column_list}', @column_list);
     SELECT @stmt = REPLACE(@stmt, N'{key_list}', @key_list);
