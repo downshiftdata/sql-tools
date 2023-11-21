@@ -1,3 +1,5 @@
+SET NOCOUNT ON;
+
 /* Replace schema_name with the desired schema name and execute. */
 DECLARE @schema_name NVARCHAR(128) = N'schema_name';
 
