@@ -1,6 +1,10 @@
 # sql-tools
 A toolbox of semi-useful SQL queries
 
+## deploy folder
+
+See the README.md in that folder.
+
 ## gen folder
 
 The scripts in this folder are for automatically generating scripts for CRUD procedures for tables in a new database. They are not meant to be comprehensive. They are only a starting point for subsequent manual editing.
