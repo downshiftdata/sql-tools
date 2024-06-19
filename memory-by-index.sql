@@ -20,7 +20,7 @@ WITH cte AS (SELECT
             ON o.[schema_id] = s.[schema_id]
         INNER JOIN sys.indexes AS i
             ON p.[object_id] = i.[object_id]
-            AND p.[object_id] = i.[object_id])
+            AND p.[index_id] = i.[index_id])
 SELECT
         cte.[object_id],
         cte.[schema_name],
