@@ -1,33 +1,6 @@
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 SET NOCOUNT ON;
-DROP TABLE IF EXISTS #qs;
-CREATE TABLE #qs (
-    [plan_handle] VARBINARY(64) NOT NULL,
-    [plan_generation_num] BIGINT NOT NULL,
-    [i] INT IDENTITY(1,1) NOT NULL,
-    [statement_start_offset] INT NOT NULL,
-    [statement_end_offset] INT NOT NULL,
-    [creation_time] DATETIME NOT NULL,
-    [execution_count] BIGINT NOT NULL,
-    [total_worker_time] BIGINT NOT NULL,
-    [total_physical_reads] BIGINT NOT NULL,
-    [total_logical_writes] BIGINT NOT NULL,
-    [total_logical_reads] BIGINT NOT NULL,
-    [total_elapsed_time] BIGINT NOT NULL,
-    PRIMARY KEY ([plan_handle], [plan_generation_num], [i]));
-INSERT INTO #qs (
-        [plan_handle],
-        [plan_generation_num],
-        [statement_start_offset],
-        [statement_end_offset],
-        [creation_time],
-        [execution_count],
-        [total_worker_time],
-        [total_physical_reads],
-        [total_logical_writes],
-        [total_logical_reads],
-        [total_elapsed_time])
-    SELECT TOP (1000)
+WITH qs AS (SELECT TOP (1000)
             qs.[plan_handle],
             qs.[plan_generation_num],
             qs.[statement_start_offset],
@@ -40,8 +13,8 @@ INSERT INTO #qs (
             qs.[total_logical_reads],
             qs.[total_elapsed_time]
         FROM sys.dm_exec_query_stats AS qs
-        WHERE DATEDIFF(mi, qs.[creation_time], GETDATE()) >= 1
-        ORDER BY qs.[total_elapsed_time] / DATEDIFF(mi, qs.[creation_time], GETDATE()) DESC;
+        WHERE DATEDIFF(mi, qs.[creation_time], GETDATE()) >= 2
+        ORDER BY qs.[total_elapsed_time] / DATEDIFF(mi, qs.[creation_time], GETDATE()) DESC)
 SELECT
         SUBSTRING(st.[text],
             qs.[statement_start_offset] / 2 + 1,
@@ -60,7 +33,7 @@ SELECT
         qs.[total_logical_reads] / DATEDIFF(mi, qs.[creation_time], GETDATE()) AS [logical_reads_per_min],
         qs.[total_elapsed_time] / DATEDIFF(mi, qs.[creation_time], GETDATE()) AS [elapsed_time_per_min],
         qp.[query_plan]
-    FROM #qs AS qs
+    FROM qs
         INNER JOIN sys.dm_exec_cached_plans AS cp
             ON qs.[plan_handle] = cp.[plan_handle]
         CROSS APPLY sys.dm_exec_query_plan(qs.[plan_handle]) AS qp
